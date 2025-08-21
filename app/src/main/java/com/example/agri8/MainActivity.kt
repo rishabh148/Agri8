@@ -78,6 +78,46 @@ class MainActivity: ComponentActivity() {
                                 MainContent(grassGreen) // Call your existing content composable
                             }
                         }
+                        composable("app") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                AppScreen()
+                            }
+                        }
+                        composable("library") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                LibraryScreen()
+                            }
+                        }
+                        composable("news") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                NewsScreen()
+                            }
+                        }
+                        composable("shop") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                ShopScreen()
+                            }
+                        }
                     }
                 }
             )
@@ -328,5 +368,61 @@ fun loadDiseaseTreatments(context: android.content.Context): Map<String, String>
         e.printStackTrace()
     }
     return treatmentMap
+}
+
+@Composable
+fun PlaceholderScreen(title: String, description: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun AppScreen() {
+    PlaceholderScreen(
+        title = "App",
+        description = "Feature modules will appear here."
+    )
+}
+
+@Composable
+fun LibraryScreen() {
+    PlaceholderScreen(
+        title = "Library",
+        description = "Browse agronomy guides, tips, and references."
+    )
+}
+
+@Composable
+fun NewsScreen() {
+    PlaceholderScreen(
+        title = "News",
+        description = "Latest agriculture news and updates."
+    )
+}
+
+@Composable
+fun ShopScreen() {
+    PlaceholderScreen(
+        title = "Shop",
+        description = "Discover tools and supplies for your farm."
+    )
 }
 
