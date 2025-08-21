@@ -78,6 +78,46 @@ class MainActivity: ComponentActivity() {
                                 MainContent(grassGreen) // Call your existing content composable
                             }
                         }
+                        composable("app") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                AppScreen()
+                            }
+                        }
+                        composable("library") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                LibraryScreen()
+                            }
+                        }
+                        composable("news") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                NewsScreen()
+                            }
+                        }
+                        composable("shop") {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(paddingValues),
+                                color = Color(0xFFF5F5F5)
+                            ) {
+                                ShopScreen()
+                            }
+                        }
                     }
                 }
             )
@@ -328,5 +368,261 @@ fun loadDiseaseTreatments(context: android.content.Context): Map<String, String>
         e.printStackTrace()
     }
     return treatmentMap
+}
+
+@Composable
+fun AppScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "App Features",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "• AI-powered crop disease detection\n" +
+                    "• Real-time diagnosis and treatment recommendations\n" +
+                    "• Offline capability for remote areas\n" +
+                    "• Support for 38 different plant diseases",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start
+        )
+    }
+}
+
+@Composable
+fun LibraryScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Disease Library",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Browse our comprehensive database of plant diseases and treatments.",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Sample disease cards
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Tomato Bacterial Spot",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Symptoms: Dark spots with yellow halos on leaves\n" +
+                            "Treatment: Copper-based fungicides, remove infected plants",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+        
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Potato Late Blight",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Symptoms: Dark, water-soaked lesions on leaves\n" +
+                            "Treatment: Fungicides containing chlorothalonil or mancozeb",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun NewsScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Agricultural News",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Sample news items
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "New Resistant Tomato Varieties Released",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Scientists have developed new tomato varieties with enhanced resistance to bacterial spot and late blight...",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Published: 2 days ago",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+        }
+        
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Climate Change Impact on Crop Diseases",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Rising temperatures are causing shifts in disease patterns, requiring new management strategies...",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Published: 1 week ago",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ShopScreen() {
+    val grassGreen = Color(0xFF4CAF50)
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Agricultural Shop",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Buy quality agricultural products and treatments",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        
+        // Sample product cards
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Copper Fungicide Spray",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Effective against bacterial and fungal diseases\n" +
+                            "Size: 500ml\n" +
+                            "Price: $15.99",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = { /* TODO: Add to cart */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = grassGreen)
+                ) {
+                    Text("Add to Cart", color = Color.White)
+                }
+            }
+        }
+        
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "Organic Neem Oil",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Natural pest and disease control\n" +
+                            "Size: 1 liter\n" +
+                            "Price: $24.99",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = { /* TODO: Add to cart */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = grassGreen)
+                ) {
+                    Text("Add to Cart", color = Color.White)
+                }
+            }
+        }
+    }
 }
 
