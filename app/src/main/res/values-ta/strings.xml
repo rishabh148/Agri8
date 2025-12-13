@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Agri8</string>
+    <string name="upload_crop_image">பயிர் படத்தை பதிவேற்றவும்</string>
+    <string name="select_image">படத்தைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="analyze_disease">நோயை பகுப்பாய்வு செய்யவும்</string>
+    <string name="analyzing">பகுப்பாய்வு செய்கிறது...</string>
+    <string name="detected_disease">கண்டறியப்பட்ட நோய்</string>
+    <string name="confidence">நம்பகத்தன்மை</string>
+    <string name="treatment">சிகிச்சை</string>
+    <string name="watch_treatment_video">சிகிச்சை வீடியோவைப் பார்க்கவும்</string>
+    <string name="search_google">Google இல் தேடவும்</string>
+    <string name="change_language">மொழியை மாற்றவா?</string>
+    <string name="go_back_language_selection">மொழி தேர்வுக்கு திரும்ப செல்ல விரும்புகிறீர்களா?</string>
+    <string name="yes">ஆம்</string>
+    <string name="no">இல்லை</string>
+</resources>
+

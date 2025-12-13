@@ -97,6 +97,10 @@ dependencies {
     // JSON Parsing (Optional)
     implementation("com.google.code.gson:gson:2.10")
 
+    // ML Kit Translation
+    implementation("com.google.mlkit:translate:17.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+
     // Testing Libraries
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")

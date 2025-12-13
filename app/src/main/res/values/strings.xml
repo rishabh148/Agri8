@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Agri8</string>
+    <string name="upload_crop_image">Upload Crop Image</string>
+    <string name="select_image">Select Image</string>
+    <string name="analyze_disease">Analyze Disease</string>
+    <string name="analyzing">Analyzing...</string>
+    <string name="detected_disease">Detected Disease</string>
+    <string name="confidence">Confidence</string>
+    <string name="treatment">Treatment</string>
+    <string name="watch_treatment_video">Watch Treatment Video</string>
+    <string name="search_google">Search on Google</string>
+    <string name="change_language">Change Language?</string>
+    <string name="go_back_language_selection">Do you want to go back to language selection?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
