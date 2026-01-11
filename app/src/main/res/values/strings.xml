@@ -13,4 +13,7 @@
     <string name="go_back_language_selection">Do you want to go back to language selection?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="initializing_model">Initializing ML Model...</string>
+    <string name="please_wait">Please wait</string>
+    <string name="selected_image_desc">Selected Image</string>
 </resources>

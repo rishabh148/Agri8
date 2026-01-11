@@ -48,12 +48,30 @@ class LanguageSelectionViewModel @Inject constructor(
         }
     }
     
+    /**
+     * Select language synchronously (for immediate locale change).
+     * This saves the language immediately before calling AppCompatDelegate.setApplicationLocales().
+     */
+    fun selectLanguageSync(languageCode: String) {
+        languageRepository.setLanguageSync(languageCode)
+        _isLanguageSelected.value = true
+        _selectedLanguageCode.value = languageCode
+    }
+    
     fun clearNavigatingState() {
         _isNavigating.value = false
     }
     
     suspend fun getCurrentLanguageCode(): String? {
         return languageRepository.getLanguageCode()
+    }
+    
+    /**
+     * Check if a language has been selected (synchronous).
+     * Used for determining initial navigation destination.
+     */
+    fun isLanguageSelectedSync(): Boolean {
+        return languageRepository.isLanguageSelected()
     }
     
     companion object {

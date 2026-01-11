@@ -1,12 +1,10 @@
 package com.example.agri8.presentation.ui
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,14 +23,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.example.agri8.util.localizedStringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.agri8.R
 import com.example.agri8.presentation.viewmodel.DiseaseDetectionViewModel
-import com.example.agri8.util.LocaleHelper
-import kotlinx.coroutines.delay
 
 /**
  * Disease Detection Screen - UI Layer
@@ -45,7 +42,6 @@ fun DiseaseDetectionScreen(
     viewModel: DiseaseDetectionViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val activity = remember { (context as? ComponentActivity) }
     val grassGreen = Color(0xFF4CAF50)
     
     // Observe ViewModel state
@@ -58,20 +54,9 @@ fun DiseaseDetectionScreen(
     
     var showBackDialog by remember { mutableStateOf(false) }
     
-    // Handle locale changes
+    // Initialize model after screen transition
     LaunchedEffect(Unit) {
-        val prefs = context.getSharedPreferences("Agri8Prefs", Context.MODE_PRIVATE)
-        val savedLocale = prefs.getString("selected_language", null)
-        
-        if (savedLocale != null && savedLocale.isNotEmpty()) {
-            val currentLocale = context.resources.configuration.locales[0].language
-            
-            if (currentLocale != savedLocale) {
-                delay(200)
-                LocaleHelper.setLocale(context, savedLocale)
-                activity?.recreate()
-            }
-        }
+        viewModel.initializeModel()
     }
     
     // Handle back button press
@@ -125,14 +110,14 @@ fun DiseaseDetectionScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Initializing ML Model...",
+                        text = localizedStringResource(R.string.initializing_model),
                         color = Color.Gray,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Please wait",
+                        text = localizedStringResource(R.string.please_wait),
                         color = Color.Gray,
                         fontSize = 14.sp
                     )
@@ -150,7 +135,7 @@ fun DiseaseDetectionScreen(
                 if (selectedImage == null) {
                     // No image selected
                     Text(
-                        text = stringResource(R.string.app_name),
+                        text = localizedStringResource(R.string.app_name),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = grassGreen,
@@ -159,7 +144,7 @@ fun DiseaseDetectionScreen(
                     )
                     
                     Text(
-                        text = stringResource(R.string.upload_crop_image),
+                        text = localizedStringResource(R.string.upload_crop_image),
                         fontSize = 18.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center,
@@ -175,7 +160,7 @@ fun DiseaseDetectionScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.select_image),
+                            text = localizedStringResource(R.string.select_image),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -184,7 +169,7 @@ fun DiseaseDetectionScreen(
                     // Image selected but not analyzed yet
                     selectedImage?.let { bitmap ->
                         Text(
-                            text = stringResource(R.string.app_name),
+                            text = localizedStringResource(R.string.app_name),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             color = grassGreen,
@@ -201,7 +186,7 @@ fun DiseaseDetectionScreen(
                         ) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
-                                contentDescription = "Selected Image",
+                                contentDescription = localizedStringResource(R.string.selected_image_desc),
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -224,13 +209,13 @@ fun DiseaseDetectionScreen(
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = stringResource(R.string.analyzing),
+                                    text = localizedStringResource(R.string.analyzing),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
                             } else {
                                 Text(
-                                    text = stringResource(R.string.analyze_disease),
+                                    text = localizedStringResource(R.string.analyze_disease),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -249,7 +234,7 @@ fun DiseaseDetectionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.app_name),
+                    text = localizedStringResource(R.string.app_name),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = grassGreen,
@@ -269,7 +254,7 @@ fun DiseaseDetectionScreen(
                     ) {
                         Image(
                             bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "Selected Image",
+                            contentDescription = localizedStringResource(R.string.selected_image_desc),
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -292,13 +277,13 @@ fun DiseaseDetectionScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = stringResource(R.string.analyzing),
+                                text = localizedStringResource(R.string.analyzing),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
                         } else {
                             Text(
-                                text = stringResource(R.string.analyze_disease),
+                                text = localizedStringResource(R.string.analyze_disease),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -343,12 +328,12 @@ fun DiseaseDetectionScreen(
             onDismissRequest = { showBackDialog = false },
             title = {
                 Text(
-                    text = stringResource(R.string.change_language),
+                    text = localizedStringResource(R.string.change_language),
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
-                Text(stringResource(R.string.go_back_language_selection))
+                Text(localizedStringResource(R.string.go_back_language_selection))
             },
             confirmButton = {
                 Button(
@@ -358,14 +343,14 @@ fun DiseaseDetectionScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = grassGreen)
                 ) {
-                    Text(stringResource(R.string.yes))
+                    Text(localizedStringResource(R.string.yes))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showBackDialog = false }
                 ) {
-                    Text(stringResource(R.string.no))
+                    Text(localizedStringResource(R.string.no))
                 }
             }
         )
@@ -391,7 +376,7 @@ fun DiseaseResultCard(
                 .padding(20.dp)
         ) {
             Text(
-                text = stringResource(R.string.detected_disease),
+                text = localizedStringResource(R.string.detected_disease),
                 fontSize = 16.sp,
                 color = Color.Gray,
                 fontWeight = FontWeight.Medium
@@ -409,7 +394,7 @@ fun DiseaseResultCard(
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = "${stringResource(R.string.confidence)}: ${String.format("%.1f", result.confidence * 100)}%",
+                text = "${localizedStringResource(R.string.confidence)}: ${String.format("%.1f", result.confidence * 100)}%",
                 fontSize = 14.sp,
                 color = Color.Gray
             )
@@ -420,7 +405,7 @@ fun DiseaseResultCard(
             )
             
             Text(
-                text = stringResource(R.string.treatment),
+                text = localizedStringResource(R.string.treatment),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -448,7 +433,7 @@ fun DiseaseResultCard(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.watch_treatment_video),
+                    text = localizedStringResource(R.string.watch_treatment_video),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -468,7 +453,7 @@ fun DiseaseResultCard(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.search_google),
+                    text = localizedStringResource(R.string.search_google),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White

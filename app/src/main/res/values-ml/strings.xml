@@ -13,5 +13,8 @@
     <string name="go_back_language_selection">നിങ്ങൾ ഭാഷാ തിരഞ്ഞെടുപ്പിലേക്ക് മടങ്ങാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?</string>
     <string name="yes">അതെ</string>
     <string name="no">അല്ല</string>
+    <string name="initializing_model">ML മോഡൽ ആരംഭിക്കുന്നു...</string>
+    <string name="please_wait">ദയവായി കാത്തിരിക്കുക</string>
+    <string name="selected_image_desc">തിരഞ്ഞെടുത്ത ചിത്രം</string>
 </resources>
 

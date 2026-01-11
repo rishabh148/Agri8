@@ -9,15 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,8 +26,6 @@ fun LanguageSelectionScreen(
     viewModel: LanguageSelectionViewModel = hiltViewModel()
 ) {
     val grassGreen = Color(0xFF4CAF50)
-    var isNavigating by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
     
     Box(
         modifier = Modifier
@@ -88,43 +78,15 @@ fun LanguageSelectionScreen(
                     LanguageItem(
                         language = language,
                         onClick = {
-                            isNavigating = true
-                            viewModel.selectLanguage(language.code)
-                            // Show loading briefly, then navigate
-                            coroutineScope.launch {
-                                delay(150) // Brief delay to show loading indicator
-                                onNavigateToDiseaseDetection()
-                            }
+                            // 1. Save the language synchronously
+                            viewModel.selectLanguageSync(language.code)
+                            
+                            // 2. Navigate to DiseaseDetection screen
+                            // The locale will be updated automatically via LocaleProvider in MainActivity
+                            // No Activity recreation needed!
+                            onNavigateToDiseaseDetection()
                         },
                         grassGreen = grassGreen
-                    )
-                }
-            }
-        }
-        
-        // Loading overlay during navigation transition
-        if (isNavigating) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.7f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(48.dp),
-                        color = grassGreen,
-                        strokeWidth = 4.dp
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Loading...",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
                     )
                 }
             }

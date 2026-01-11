@@ -46,15 +46,14 @@ class DiseaseDetectionViewModel @Inject constructor(
     val currentLanguageCode: StateFlow<String> = _currentLanguageCode.asStateFlow()
     
     init {
-        initializeModel()
         loadLanguageCode()
     }
     
     /**
      * Initialize the ML model in the repository.
-     * This should be called when the ViewModel is created.
+     * This should be called from the screen after the transition animation completes.
      */
-    private fun initializeModel() {
+    fun initializeModel() {
         viewModelScope.launch {
             _isModelLoading.value = true
             _error.value = null
@@ -117,27 +116,25 @@ class DiseaseDetectionViewModel @Inject constructor(
                 // Get selected language for translation
                 val selectedLanguage = languageRepository.getLanguageCode() ?: "en"
                 
-                // Translate disease name and treatment if needed
-                val translatedDiseaseName = if (selectedLanguage.isNotEmpty() && selectedLanguage != "en") {
-                    try {
-                        translationRepository.translateText(result.diseaseName, selectedLanguage)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        result.diseaseName // Fallback to original if translation fails
-                    }
-                } else {
-                    result.diseaseName
-                }
+                // Translate disease name and treatment using Google ML Kit
+                // Use batch translation for better performance when both need translation
+                val translatedDiseaseName: String
+                val translatedTreatment: String
                 
-                val translatedTreatment = if (selectedLanguage.isNotEmpty() && selectedLanguage != "en") {
-                    try {
-                        translationRepository.translateText(result.treatment, selectedLanguage)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        result.treatment // Fallback to original if translation fails
-                    }
+                if (selectedLanguage.isNotEmpty() && selectedLanguage != "en") {
+                    // Use batch translation for efficiency (translates both at once)
+                    val textsToTranslate = listOf(result.diseaseName, result.treatment)
+                    val translatedTexts = translationRepository.translateTexts(
+                        textsToTranslate,
+                        selectedLanguage
+                    )
+                    
+                    translatedDiseaseName = translatedTexts.getOrElse(0) { result.diseaseName }
+                    translatedTreatment = translatedTexts.getOrElse(1) { result.treatment }
                 } else {
-                    result.treatment
+                    // No translation needed for English
+                    translatedDiseaseName = result.diseaseName
+                    translatedTreatment = result.treatment
                 }
                 
                 // Create translated result

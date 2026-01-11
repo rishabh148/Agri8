@@ -20,6 +20,14 @@ class LanguageRepository @Inject constructor(
         prefs.edit().putString(KEY_LANGUAGE, languageCode).apply()
     }
     
+    /**
+     * Set language synchronously (blocks until saved).
+     * Use this when you need the language to be saved immediately before locale change.
+     */
+    fun setLanguageSync(languageCode: String) {
+        prefs.edit().putString(KEY_LANGUAGE, languageCode).commit()
+    }
+    
     fun isLanguageSelected(): Boolean {
         return getLanguageCode()?.isNotEmpty() == true
     }
