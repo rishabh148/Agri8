@@ -1,33 +1,30 @@
 package com.example.agri8
 
-import android.app.Activity
-import android.content.res.Configuration
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.agri8.presentation.navigation.AppNavigation
+import com.example.agri8.presentation.navigation.Screen
+import com.example.agri8.presentation.viewmodel.LanguageSelectionViewModel
 import com.example.agri8.ui.theme.Agri8Theme
-import java.util.Locale
+import com.example.agri8.util.LocaleHelper
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Initialize LanguageManager
-        LanguageManager.init(this)
-        
-        // Set app locale based on saved language
-        setAppLocale()
         
         setContent {
             Agri8Theme {
@@ -41,72 +38,38 @@ class MainActivity : ComponentActivity() {
         }
     }
     
-    override fun attachBaseContext(newBase: android.content.Context) {
-        LanguageManager.init(newBase)
-        val languageCode = LanguageManager.getSelectedLanguage()
-        val context = if (languageCode.isNotEmpty()) {
+    override fun attachBaseContext(newBase: Context) {
+        // Get the saved language code from SharedPreferences (quick access)
+        val prefs = newBase.getSharedPreferences("Agri8Prefs", Context.MODE_PRIVATE)
+        val languageCode = prefs.getString("selected_language", null)
+        val context = if (languageCode != null && languageCode.isNotEmpty()) {
             LocaleHelper.setLocale(newBase, languageCode)
         } else {
             newBase
         }
         super.attachBaseContext(context)
     }
-    
-    private fun setAppLocale() {
-        val languageCode = LanguageManager.getSelectedLanguage()
-        if (languageCode.isNotEmpty()) {
-            val locale = LanguageManager.getLocale()
-            Locale.setDefault(locale)
-            val config = Configuration()
-            config.setLocale(locale)
-            baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
-        }
-    }
 }
 
 @Composable
-fun AppContent() {
-    val context = LocalContext.current
-    val activity = rememberUpdatedState(context as? Activity)
-    var languageSelected by rememberSaveable { mutableStateOf(LanguageManager.isLanguageSelected()) }
+fun AppContent(
+    languageViewModel: LanguageSelectionViewModel = hiltViewModel()
+) {
+    val navController = rememberNavController()
+    val isLanguageSelected by languageViewModel.isLanguageSelected.collectAsState()
     
-    if (!languageSelected) {
-        LanguageSelectionScreen(
-            onLanguageSelected = { languageCode ->
-                LanguageManager.setLanguage(languageCode)
-                applyLocale(context, languageCode)
-                languageSelected = true
-                // Recreate so attachBaseContext picks up the new locale
-                activity.value?.recreate()
-            }
-        )
-    } else {
-        DiseaseDetectionScreen(
-            onBackToLanguageSelection = {
-                languageSelected = false
-            }
-        )
+    // Determine start destination based on language selection state
+    val startDestination = remember(isLanguageSelected) {
+        when (isLanguageSelected) {
+            true -> Screen.DiseaseDetection.route
+            false -> Screen.LanguageSelection.route
+            null -> Screen.LanguageSelection.route
+        }
     }
-}
-
-private fun applyLocale(context: android.content.Context, languageCode: String) {
-    val locale = when (languageCode) {
-        "hi" -> Locale("hi", "IN")
-        "te" -> Locale("te", "IN")
-        "ta" -> Locale("ta", "IN")
-        "bn" -> Locale("bn", "IN")
-        "gu" -> Locale("gu", "IN")
-        "kn" -> Locale("kn", "IN")
-        "ml" -> Locale("ml", "IN")
-        "mr" -> Locale("mr", "IN")
-        "or" -> Locale("or", "IN")
-        "pa" -> Locale("pa", "IN")
-        "ur" -> Locale("ur", "IN")
-        "en" -> Locale("en", "US")
-        else -> Locale("en", "US")
-    }
-    Locale.setDefault(locale)
-    val config = Configuration(context.resources.configuration)
-    config.setLocale(locale)
-    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    
+    AppNavigation(
+        navController = navController,
+        startDestination = startDestination,
+        languageViewModel = languageViewModel
+    )
 }

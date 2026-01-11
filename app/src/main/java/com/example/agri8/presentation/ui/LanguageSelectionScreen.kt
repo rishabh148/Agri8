@@ -1,4 +1,4 @@
-package com.example.agri8
+package com.example.agri8.presentation.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +9,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -17,13 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.agri8.presentation.viewmodel.LanguageSelectionViewModel
 
 @Composable
 fun LanguageSelectionScreen(
-    onLanguageSelected: (String) -> Unit
+    onNavigateToDiseaseDetection: () -> Unit,
+    viewModel: LanguageSelectionViewModel = hiltViewModel()
 ) {
     val grassGreen = Color(0xFF4CAF50)
-    val lightGreen = Color(0xFF81C784)
+    var isNavigating by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     
     Box(
         modifier = Modifier
@@ -72,11 +84,47 @@ fun LanguageSelectionScreen(
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(SupportedLanguages.languages) { language ->
+                items(LanguageSelectionViewModel.supportedLanguages) { language ->
                     LanguageItem(
                         language = language,
-                        onClick = { onLanguageSelected(language.code) },
+                        onClick = {
+                            isNavigating = true
+                            viewModel.selectLanguage(language.code)
+                            // Show loading briefly, then navigate
+                            coroutineScope.launch {
+                                delay(150) // Brief delay to show loading indicator
+                                onNavigateToDiseaseDetection()
+                            }
+                        },
                         grassGreen = grassGreen
+                    )
+                }
+            }
+        }
+        
+        // Loading overlay during navigation transition
+        if (isNavigating) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.7f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(48.dp),
+                        color = grassGreen,
+                        strokeWidth = 4.dp
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Loading...",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
@@ -86,7 +134,7 @@ fun LanguageSelectionScreen(
 
 @Composable
 fun LanguageItem(
-    language: Language,
+    language: com.example.agri8.domain.model.Language,
     onClick: () -> Unit,
     grassGreen: Color
 ) {
@@ -145,4 +193,3 @@ fun LanguageItem(
         }
     }
 }
-
